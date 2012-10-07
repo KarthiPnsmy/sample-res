@@ -4,9 +4,13 @@ var db = require('db');
 var utility = require('utils');
 Ti.App.selectedItem = [];
 var categoryWin = require('ui/menuCategoryList');
+var reservationWin = require('ui/reservation');
 db.createDb()
+Ti.App.Properties.setList('checkedOutList', []);
 
 var win = Titanium.UI.createWindow({
+	navBarHidden:true,
+	exitOnClose:true,
 	title : 'Restarunts',
 	backgroundColor : '#fff'
 });
@@ -22,7 +26,7 @@ var navBar = Titanium.UI.createView({
 win.add(navBar);
 
 var navTitle = Ti.UI.createLabel({
-	//text: "Restarunts",
+	text: "Restarunts",
 	textAlign : 'center',
 	top : 6,
 	height : 28,
@@ -88,10 +92,15 @@ var restaruntList = Titanium.UI.createTableView({
 win.add(restaruntList);
 
 restaruntList.addEventListener('click', function(e) {
-	if(e.rowData.restaruntId){
-		var window = categoryWin.menuCategoryList();
-		//window.open({modal:true});
-		window.open();
+	if(e.source.bookTabel){
+		var window = reservationWin.reservation(e.rowData.searchText);
+		window.open({navBarHidden:true, modal:true});
+	}else{
+		if(e.rowData.restaruntId){
+			var window = categoryWin.menuCategoryList();
+			window.open({navBarHidden:true, modal:true});
+			//window.open();
+		}
 	}
 });
 
@@ -110,7 +119,7 @@ function getRestaruntListing(arg) {
 
 	for ( i = 0; i < rows.length; i++) {
 		var row = Ti.UI.createTableViewRow({
-			height : 65,
+			height : 90,
 			searchText : rows[i].name,
 			restaruntId: rows[i].id
 		});
@@ -143,6 +152,17 @@ function getRestaruntListing(arg) {
 			textAlign : "left"
 		});
 		row.add(restaruntAddress);
+    
+	    var bookTabelButton = Ti.UI.createButton({
+	    	title:"Book Tabel",
+	    	top:55,
+	    	width:120,
+	    	height:30,
+	    	left:5,
+	    	bookTabel:"yes"
+	    });
+		row.add(bookTabelButton);
+	
 		rowData.push(row);
 	}
 	restaruntList.setData(rowData);

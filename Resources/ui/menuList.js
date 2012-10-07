@@ -2,9 +2,9 @@ exports.menuList = function(categoryText) {
 	var db = require('db');
 	var selectedItem = [];
 	var menuDetailWin = require('ui/menuDetail');
+	var checkoutWin = require('ui/checkout');
 	
 	var win = Titanium.UI.createWindow({
-		title : 'Menu List',
 		backgroundColor : '#fff'
 	});
 
@@ -19,7 +19,7 @@ exports.menuList = function(categoryText) {
 	win.add(navBar);
 	
 	var navTitle = Ti.UI.createLabel({
-		//text: "Menu List",
+		text: categoryText,
 		textAlign : 'center',
 		top : 6,
 		height : 28,
@@ -32,6 +32,24 @@ exports.menuList = function(categoryText) {
 		},
 	});
 	navBar.add(navTitle);
+	
+	var proceedButton = Ti.UI.createButton({
+		title:"Proceed",
+		height:30,
+		width:90,
+		top:5,
+		right:10
+	});
+	navBar.add(proceedButton);
+	
+	proceedButton.addEventListener('click', function(e) {
+		if(selectedItem.length>0){
+			var window = checkoutWin.checkout(selectedItem);
+			window.open({navBarHidden:true, modal:true});		
+		}else{
+			alert("Please select Item to proceed")
+		}
+	});
 	
 	var menuListing = Titanium.UI.createTableView({
 		top : 40,
@@ -47,20 +65,20 @@ exports.menuList = function(categoryText) {
 			if(e.source.checked == true){    
 				Ti.API.info("removing one item = = = "+e.source.itemId);				   				
 				selectedItem.splice(selectedItem.indexOf(e.source.itemId),1); 
-				e.source.image = 'images/unchecked.png';
+				e.source.image = '../images/unchecked.png';
 				e.source.checked = false;
 			}else{
 				Ti.API.info("adding one item = = = "+e.source.itemId);
 				selectedItem.push(e.source.itemId);  								   			
-				e.source.image = '/images/checked.png';
+				e.source.image = '../images/checked.png';
 				e.source.checked = true;
 			}
 			Ti.API.info("after Ti.App.selectedItem = = = "+selectedItem);
 		}else if(e.rowData.itemId){
 			var window = menuDetailWin.menuDetail(e.rowData.itemId);
-			//window.open({modal:true});
-			window.open();
-			alert("open win for e.rowData.itemId = "+e.rowData.itemId);
+			window.open({navBarHidden:true, modal:true});
+			//window.open();
+			//alert("open win for e.rowData.itemId = "+e.rowData.itemId);
 		}
 		
 	});
@@ -81,7 +99,7 @@ exports.menuList = function(categoryText) {
 			left : 10,
 			height : 60,
 			width :55,
-			//image:"images/default_food_icon.png",
+			backgroundImage:"../images/default_food_icon.png",
 		});
 		row.add(itemImage);
 		
@@ -130,7 +148,7 @@ exports.menuList = function(categoryText) {
 			checked:false,
 			itemId:rows[i].item_id,
 			isItemCheckbox:"yes",
-			image:"images/unchecked.png"
+			image:"../images/unchecked.png"
 		});
 		row.add(itemCheckbox);
 

@@ -81,14 +81,61 @@ exports.getMenuList = function(categoryText) {
 
 exports.getMenuItem = function(ItemId) {
 	var result=[];
+	Ti.API.info("db ItemId == "+ItemId);
 	var db = Ti.Database.open(DATABASE_NAME);
-	var rows = db.execute("SELECT hotel_id, category, id, name, description, price, is_veg  FROM menu WHERE id = ?", ItemId);
+	var rows = db.execute("SELECT hotel_id, category, id, name, description, price, is_veg  FROM menu WHERE id IN ("+ItemId+")");
+	//var rows = db.execute("SELECT hotel_id, category, id, name, description, price, is_veg  FROM menu WHERE id IN (?)", ItemId);
 	var count = rows.getRowCount();
-
+	Ti.API.info("db items count == "+count);
 	while (rows.isValidRow()) {
 		result.push({hotel_id:rows.fieldByName('hotel_id'), item_id:rows.fieldByName('id'), category:rows.fieldByName('category'), name:rows.fieldByName('name'), description:rows.fieldByName('description'), price:rows.fieldByName('price'), is_veg:rows.fieldByName('is_veg')});
 		rows.next();
 	}
 	db.close();
 	return result;
+};
+
+exports.addUser = function(arg){
+	var mydb = Ti.Database.open(DATABASE_NAME);
+	Ti.API.info("addUser arg == "+JSON.stringify(arg))
+    mydb.execute('INSERT INTO users (name, email, phone, address) VALUES (?,?,?,?)', arg.name,arg.email,arg.phone,arg.address);
+    
+    //fetch user id
+	var dbrows = mydb.execute('SELECT MAX(id) as "userId" from users');
+	var userId = 0;
+	if (dbrows.isValidRow()) {
+		Ti.API.info("this userId == "+userId);
+		userId = dbrows.fieldByName('userId');
+	}
+	//userId = userId + 1;
+	dbrows.close();
+	mydb.close();
+	
+	return userId;
+};
+
+exports.addOrder = function(arg){
+	var mydb = Ti.Database.open(DATABASE_NAME);
+	Ti.API.info("addOrder arg == "+JSON.stringify(arg))
+    mydb.execute('INSERT INTO orders (user_id, total_amount) VALUES (?,?)', arg.userId,arg.totalAmount);
+    
+    //fetch order id
+	var dbrows = mydb.execute('SELECT MAX(id) as "orderId" from orders');
+	var orderId = 0;
+	if (dbrows.isValidRow()) {
+		Ti.API.info("this orderId == "+orderId);
+		orderId = dbrows.fieldByName('orderId');
+	}
+	//orderId += 1;
+	dbrows.close();
+	mydb.close();
+	
+	return orderId;
+};
+
+exports.addOrderLine = function(arg){
+	var mydb = Ti.Database.open(DATABASE_NAME);
+	Ti.API.info("addOrder arg == "+JSON.stringify(arg))
+    mydb.execute('INSERT INTO order_line (user_id, order_id, item_id, quantity) VALUES (?,?,?,?)', arg.userId, arg.orderId, arg.itemId, arg.quantity);
+	mydb.close();
 };

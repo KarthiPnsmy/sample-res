@@ -1,10 +1,9 @@
 exports.menuDetail = function(itemId) {
-	alert("itemId == "+itemId);
+	//alert("itemId == "+itemId);
 	var db = require('db');
 	var item = db.getMenuItem(itemId);
 	
 	var win = Titanium.UI.createWindow({
-		title : 'Menu Detail',
 		backgroundColor : '#fff'
 	});
 
@@ -42,24 +41,24 @@ exports.menuDetail = function(itemId) {
 	
 	var bacicInfoHolder = Ti.UI.createView({
 		layout:"horizontal",
-		height : Ti.UI.SIZE
+		height : Ti.UI.SIZE,
 		//backgroundColor:"red"
 	});
 	container.add(bacicInfoHolder);
-	
 
 	var itemImage = Ti.UI.createImageView({
 		top : 10,
 		left : 10,
 		height : 90,
 		width :75,
-		backgroundColor:"#ccc"
-		//image:"images/default_food_icon.png",
+		backgroundColor:"#ccc",
+		image:"../images/default_food_icon.png",
 	});
 	bacicInfoHolder.add(itemImage);
 
 	var textHolder = Ti.UI.createView({
 		layout:"vertical",
+		width : Ti.UI.SIZE,
 		height : Ti.UI.SIZE,
 		left:10
 	});

@@ -3,7 +3,6 @@ exports.menuCategoryList = function() {
 	var menuWin = require('ui/menuList');
 	
 	var win = Titanium.UI.createWindow({
-		title : 'Category List',
 		backgroundColor : '#fff'
 	});
 
@@ -18,7 +17,7 @@ exports.menuCategoryList = function() {
 	win.add(navBar);
 	
 	var navTitle = Ti.UI.createLabel({
-		//text: "Category List",
+		text: "Menu",
 		textAlign : 'center',
 		top : 6,
 		height : 28,
@@ -43,8 +42,8 @@ exports.menuCategoryList = function() {
 	categoryList.addEventListener('click', function(e) {
 		if(e.rowData.categoryText){
 			var window = menuWin.menuList(e.rowData.categoryText);
-			//window.open({modal:true});
-			window.open();
+			window.open({navBarHidden:true,modal:true});
+			//window.open();
 		}
 	});
 
@@ -79,7 +78,7 @@ exports.menuCategoryList = function() {
 			height : 25,
 			width:40,
 			borderRadius:12,
-			backgroundColor : 'red',
+			backgroundColor : '#2881BB',
 		});
 		row.add(itemCountHolder);
 		
