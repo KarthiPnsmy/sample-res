@@ -1,9 +1,10 @@
 exports.checkout = function(selectedItems) {
 	//alert("itemId == "+itemId);
 	var db = require('db');
+	var placeOrderWin = require('ui/placeOrder');
 	//var item = db.getMenuItem(selectedItems);
 	selectedItems = selectedItems.toString(); 
-	alert("selectedItems == "+selectedItems);
+	//alert("selectedItems == "+selectedItems);
 	Ti.API.info("chk selectedItems == "+selectedItems);
 	var selectedItems = db.getMenuItem(selectedItems);
 	Ti.API.info("chk data == "+JSON.stringify(selectedItems));
@@ -119,6 +120,60 @@ exports.checkout = function(selectedItems) {
 	});
 	coloumn3.add(unitLabel);	
 
+    var checkedOutList = Ti.UI.createView({
+    	layout:"vertical",
+		height : Ti.UI.SIZE,
+	});
+	container.add(checkedOutList);
+	
+	var placeOrderButton = Ti.UI.createButton({
+		title:"Place Order",
+		height:30,
+		width:150,
+		top:10
+	});
+	container.add(placeOrderButton);
+	
+	placeOrderButton.addEventListener('click', function(e) {
+		Ti.API.info("inside event listen === ");
+		if(checkedOutList.children){
+			Ti.API.info("checkedOutList.children === "+checkedOutList.children);
+			var childLen = checkedOutList.children.length;
+			Ti.API.info("childLen === "+childLen);
+			if(childLen!=0){
+				var finalCheckedoutList = [];
+				for(var i=0; i<childLen; i++){
+					Ti.API.info("childLen loop === "+i);
+					//Ti.API.info("sub child === "+JSON.stringify(checkedOutList.children[i]));
+					//Ti.API.info("sub child length === "+checkedOutList.children[i].children.length);
+					if(checkedOutList.children[i] && checkedOutList.children[i].children.length){
+						//Ti.API.info("sub child length 			=== "+checkedOutList.children[i].children.length);
+						//Ti.API.info("sub child item name1 		=== "+JSON.stringify(checkedOutList.children[i].children[0]));
+						//Ti.API.info("sub child item name2		=== "+JSON.stringify(checkedOutList.children[i].children[0].children[0]));
+						var itemName 		= checkedOutList.children[i].children[0].children[0].text;
+						var itemId 			= checkedOutList.children[i].children[0].children[0].itemId;
+						var itemPrice 		= checkedOutList.children[i].children[1].children[0].itemPrice;
+						var itemQuantity 	= checkedOutList.children[i].children[2].children[0].value;
+						
+						Ti.API.info("sub child item name 		=== "+itemName);
+						Ti.API.info("sub child item id 			=== "+itemId);
+						Ti.API.info("sub child item price 		=== "+itemPrice);
+						Ti.API.info("sub child item quantity 	=== "+itemQuantity);
+						finalCheckedoutList.push({itemId:itemId, itemName:itemName, itemPrice:itemPrice, itemQuantity:itemQuantity})
+					}else{
+						Ti.API.info("this may be separetor === "+i);
+					}
+				}
+				Ti.API.info("finalCheckedoutList == "+finalCheckedoutList);
+				Ti.App.Properties.setList('checkedOutList', finalCheckedoutList);
+				var tmpStr = Ti.App.Properties.getList('checkedOutList', false);
+				Ti.API.info("tmpStr == "+JSON.stringify(finalCheckedoutList));
+				var window = placeOrderWin.placeOrder();
+				window.open({navBarHidden:true, modal:true});
+			}
+		}
+	});
+	
 	var rowData = [];
 	for ( i = 0; i < selectedItems.length; i++) {
 		Ti.API.info("chk inside loop == "+i);
@@ -126,7 +181,7 @@ exports.checkout = function(selectedItems) {
 			layout:"horizontal",
 			height : Ti.UI.SIZE
 		});
-		container.add(itemRow);
+		checkedOutList.add(itemRow);
 		
 		var coloumn1 = Ti.UI.createView({
 			width:"50%",
@@ -135,12 +190,13 @@ exports.checkout = function(selectedItems) {
 			//borderColor:"#999"
 		});
 		itemRow.add(coloumn1);
-	
+		Ti.API.info("itemid === "+selectedItems[i].item_id +", name == "+selectedItems[i].name);
 		var itemLabel = Ti.UI.createLabel({
 			top : 10,
 			bottom:10,
 			height : Ti.UI.SIZE,
 			text : selectedItems[i].name,
+			itemId: selectedItems[i].item_id,
 			color : '#000',
 			font : {
 				fontsSize : 14,
@@ -164,6 +220,7 @@ exports.checkout = function(selectedItems) {
 			bottom:10,
 			height : Ti.UI.SIZE,
 			text : "$ "+selectedItems[i].price,
+			itemPrice: selectedItems[i].price,
 			color : '#000',
 			font : {
 				fontsSize : 14,
@@ -177,26 +234,9 @@ exports.checkout = function(selectedItems) {
 		var coloumn3 = Ti.UI.createView({
 			width:"25%",
 			height : Ti.UI.SIZE,
-			//borderWidth:1,
-			//borderColor:"#999"
 		});
 		itemRow.add(coloumn3);
 	
-		var unitLabel = Ti.UI.createLabel({
-			top : 10,
-			bottom:10,
-			height : Ti.UI.SIZE,
-			text : 1,
-			color : '#000',
-			font : {
-				fontsSize : 14,
-				//fontWeight : "bold",
-				fontFamily : 'Helvetica Neue'
-			},
-			textAlign : "center"
-		});
-		//coloumn3.add(unitLabel);
-		
 		var unitLabel = Ti.UI.createTextField({
 			value:1,
 			borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
@@ -214,7 +254,7 @@ exports.checkout = function(selectedItems) {
 			right:0,
 			backgroundColor:"#999"
 		});
-		container.add(separator);
+		checkedOutList.add(separator);
 	}
 	return win;
 }
