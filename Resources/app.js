@@ -53,9 +53,14 @@ geoLocationIcon.addEventListener('click', function() {
 	//alert("current_location");
 	//utility.getCurrentLocation();
 	//utility.getDistance(13.060422, 80.249583, 13.067745, 80.227028);
-	getRestaruntListing({
-		filter : "currentLocation"
-	});
+	Ti.App.fireEvent('show_indicator');
+	setTimeout(function() {
+		alert("Your current possition 13.060422, 80.249583")
+		Ti.App.fireEvent('hide_indicator');
+		getRestaruntListing({
+			filter : "currentLocation"
+		});
+	}, 4000);
 });
 
 //search bar
@@ -172,3 +177,90 @@ function getRestaruntListing(arg) {
 getRestaruntListing({})
 
 win.open();
+
+
+
+//
+//  CREATE CUSTOM LOADING INDICATOR
+//
+var indWin = null;
+var actInd = null;
+
+function showIndicator() {
+	if (Ti.Platform.osname != 'android') {
+		// window container
+		indWin = Titanium.UI.createWindow({
+			height: Ti.Platform.displayCaps.platformHeight,
+			width: Ti.Platform.displayCaps.platformWidth
+		});
+
+		// black view
+		var wrappr = Titanium.UI.createView({
+			height: Ti.Platform.displayCaps.platformHeight,
+			width: Ti.Platform.displayCaps.platformWidth,
+			backgroundColor: '#000',
+			opacity: 0.4
+		});
+		indWin.add(wrappr);
+
+		// black view
+		var indView = Titanium.UI.createView({
+			height: 150,
+			width: 150,
+			backgroundColor: '#000',
+			borderRadius: 10,
+			opacity: 0.8
+		});
+		indWin.add(indView);
+	}
+
+	// loading indicator
+	actInd = Titanium.UI.createActivityIndicator({
+		style: Titanium.UI.iPhone.ActivityIndicatorStyle.BIG,
+		height: 30,
+		width: 30
+	});
+
+	if (Ti.Platform.osname != 'android') {
+		indWin.add(actInd);
+
+		// message
+		var message = Titanium.UI.createLabel({
+			text: 'Loading',
+			color: '#fff',
+			width: 'auto',
+			height: 'auto',
+			font: {
+				fontSize: 20,
+				fontWeight: 'bold'
+			},
+			bottom: 20
+		});
+		indView.add(message);
+		indWin.open();
+	} else {
+		actInd.message = "Loading";
+	}
+	actInd.show();
+
+}
+
+function hideIndicator() {
+	actInd.hide();
+	if (Ti.Platform.osname != 'android') {
+		indWin.close({
+			opacity: 0,
+			duration: 500
+		});
+	}
+}
+
+//
+// Add global event handlers to hide/show custom indicator
+//
+Titanium.App.addEventListener('show_indicator', function (e) {
+	showIndicator();
+});
+Titanium.App.addEventListener('hide_indicator', function (e) {
+	hideIndicator();
+});

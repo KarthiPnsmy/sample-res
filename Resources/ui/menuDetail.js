@@ -113,7 +113,7 @@ exports.menuDetail = function(itemId) {
 		top : 5,
 		left : 10,
 		height : Ti.UI.SIZE,
-		text : "dfhfghfghgfhgfhgf hfghfgh ",
+		text : item[0].description,
 		color:"#999",
 		font : {
 			fontsSize : 14,

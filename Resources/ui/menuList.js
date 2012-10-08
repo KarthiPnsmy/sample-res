@@ -136,7 +136,7 @@ exports.menuList = function(categoryText) {
 			left : 75,
 			height : 15,
 			width :15,
-			backgroundColor : rows[i].is_veg ? "green" : "red"
+			backgroundColor : rows[i].is_veg ? "#008000" : "red"
 		});
 		row.add(isVegIcon);
 

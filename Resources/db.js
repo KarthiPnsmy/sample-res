@@ -35,11 +35,11 @@ exports.selectRestaruntsByQuery = function(queryText) {
 };
 
 exports.selectRestaruntsByLocation = function() {
-	alert("Ti.App.CurrentLatitude "+Ti.App.CurrentLatitude +", Ti.App.Currentlongitude = "+ Ti.App.Currentlongitude);
+	//alert("Ti.App.CurrentLatitude "+Ti.App.CurrentLatitude +", Ti.App.Currentlongitude = "+ Ti.App.Currentlongitude);
 	var result=[];
 	var db = Ti.Database.open(DATABASE_NAME);
 	//var rows = db.execute("select  + testCal(a.latitude, a.longitude)+" FROM hotels a");
-	var rows = db.execute("SELECT id, name, address, latitude, longitude from hotels ORDER BY ");
+	var rows = db.execute("SELECT id, name, address, latitude, longitude from hotels WHERE id in (1)");
 	var count = rows.getRowCount();
 
 	while (rows.isValidRow()) {
