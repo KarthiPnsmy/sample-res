@@ -2,7 +2,8 @@ exports.reservation = function(restratuntName) {
 	var db = require('db');
 	
 	var win = Titanium.UI.createWindow({
-		backgroundColor : '#fff'
+		backgroundColor : '#fff',
+		windowSoftInputMode : Ti.UI.Android.SOFT_INPUT_ADJUST_PAN
 	});
 
 	//Custom Nav Bar
@@ -248,12 +249,12 @@ exports.reservation = function(restratuntName) {
 		width:120,
 		font:{fontSize:14},
 		hintText:"Booking Date",
-		value:datePickerValue
-		//editable:false
+		value:datePickerValue,
+		softKeyboardOnFocus:Ti.UI.Android.SOFT_KEYBOARD_HIDE_ON_FOCUS
 	});
 	bookingFormContainer.add(bookingDate);
 	
-	bookingDate.addEventListener('click', function(e) {
+	bookingDate.addEventListener('focus', function(e) {
 		//alert("hi "+datePickerValue);
 		bookingDate.blur();
 		var datePicker = Ti.UI.createPicker({
@@ -286,8 +287,8 @@ exports.reservation = function(restratuntName) {
 		width:120,
 		font:{fontSize:14},
 		//hintText:"Booking Time",
-		value:"08:00 PM"
-        //editable:false
+		value:"08:00 PM",
+        softKeyboardOnFocus:Ti.UI.Android.SOFT_KEYBOARD_HIDE_ON_FOCUS
 	});
 	bookingFormContainer.add(bookingTime);
 	var timePickerValue = new Date();
@@ -309,7 +310,7 @@ exports.reservation = function(restratuntName) {
         Ti.API.info("timePickerValue = "+timePickerValue);
     });
 	*/    
-	bookingTime.addEventListener('click', function(e) {
+	bookingTime.addEventListener('focus', function(e) {
 		//alert("hi "+timePickerValue);
 		bookingTime.blur();
 		var timePicker = Ti.UI.createPicker({

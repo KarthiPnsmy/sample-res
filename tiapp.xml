@@ -15,7 +15,7 @@
     </deployment-targets>
     <sdk-version>2.1.0.GA</sdk-version>
     <id>com.titutorial</id>
-    <name>Restarunt</name>
+    <name>Restaurants</name>
     <version>1.0</version>
     <publisher>karthi</publisher>
     <url>http://</url>

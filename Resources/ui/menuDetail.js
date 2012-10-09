@@ -97,7 +97,7 @@ exports.menuDetail = function(itemId) {
 		left : 0,
 		height : 15,
 		width :15,
-		backgroundColor : item[0].is_veg ? "green" : "red"
+		backgroundColor : item[0].is_veg ? "#008000" : "red"
 	});
 	textHolder.add(isVegIcon);
 

@@ -9,7 +9,8 @@ exports.checkout = function(selectedItems) {
 	var selectedItems = db.getMenuItem(selectedItems);
 	Ti.API.info("chk data == "+JSON.stringify(selectedItems));
 	var win = Titanium.UI.createWindow({
-		backgroundColor : '#fff'
+		backgroundColor : '#fff',
+		windowSoftInputMode : Ti.UI.Android.SOFT_INPUT_ADJUST_PAN
 	});
 
 	//Custom Nav Bar

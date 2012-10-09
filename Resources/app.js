@@ -11,8 +11,8 @@ Ti.App.Properties.setList('checkedOutList', []);
 var win = Titanium.UI.createWindow({
 	navBarHidden:true,
 	exitOnClose:true,
-	title : 'Restarunts',
-	backgroundColor : '#fff'
+	backgroundColor : '#fff',
+	windowSoftInputMode : Ti.UI.Android.SOFT_INPUT_ADJUST_PAN
 });
 
 //Custom Nav Bar
@@ -26,7 +26,7 @@ var navBar = Titanium.UI.createView({
 win.add(navBar);
 
 var navTitle = Ti.UI.createLabel({
-	text: "Restarunts",
+	text: "Restaurants",
 	textAlign : 'center',
 	top : 6,
 	height : 28,
@@ -76,6 +76,7 @@ searchBar.addEventListener('cancel', function(e) {
 	// hiding and showing the search bar forces it back to its non-focused appearance.
 	searchBar.hide();
 	searchBar.show();
+	searchBar.blur();
 });
 
 /*
@@ -176,9 +177,12 @@ function getRestaruntListing(arg) {
 //init
 getRestaruntListing({})
 
+
+win.addEventListener('focus', function(e) {
+	Ti.UI.Android.hideSoftKeyboard();
+});
 win.open();
-
-
+Ti.UI.Android.hideSoftKeyboard();
 
 //
 //  CREATE CUSTOM LOADING INDICATOR
